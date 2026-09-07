@@ -29,7 +29,7 @@ export default function PromptHero() {
         Turn a sentence into a scene.
       </h1>
       <p className="mx-auto mt-5 max-w-xl text-base text-muted sm:text-lg">
-        Describe what you want to see. AzaisAi renders it as cinematic video or a
+        Describe what you want to see. VistorAi renders it as cinematic video or a
         finished image in under a minute.
       </p>
 

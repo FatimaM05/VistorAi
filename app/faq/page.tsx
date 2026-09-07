@@ -13,7 +13,7 @@ const FAQS = [
   },
   {
     q: "Can I get a refund on unused credits?",
-    a: "Reach out at hello@azaisai.com and we'll sort it out case by case.",
+    a: "Reach out at hello@vistorai.com and we'll sort it out case by case.",
   },
 ];
 

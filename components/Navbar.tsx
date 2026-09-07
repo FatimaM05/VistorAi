@@ -20,7 +20,7 @@ export default function Navbar() {
     <header className="sticky top-0 z-40 border-b border-line/60 bg-ink/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="font-display text-xl tracking-tight">
-          AzaisAi
+          VistorAi
         </Link>
 
         <nav className="hidden items-center gap-7 text-sm text-muted md:flex">

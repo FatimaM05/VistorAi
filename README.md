@@ -1,6 +1,6 @@
-# AzaisAi — rebuild
+# VistorAi — rebuild
 
-A from-scratch rebuild of azaisai.com: an AI video/image generator with a free-trial
+A from-scratch rebuild of vistorai.com: an AI video/image generator with a free-trial
 credit system, real auth, real image generation, and a render history.
 
 ## Stack

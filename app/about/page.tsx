@@ -1,9 +1,9 @@
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-2xl px-6 py-20">
-      <h1 className="font-display text-4xl italic">About AzaisAi</h1>
+      <h1 className="font-display text-4xl italic">About VistorAi</h1>
       <p className="mt-6 text-muted">
-        AzaisAi puts the leading video and image models behind one prompt box, so making
+        VistorAi puts the leading video and image models behind one prompt box, so making
         something cinematic doesn't require learning four different tools first. Pick a model,
         describe the shot, and get a finished render in under a minute.
       </p>

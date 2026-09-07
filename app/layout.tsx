@@ -19,7 +19,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "AzaisAi — Turn ideas into cinematic video and image",
+  title: "VistorAi — Turn ideas into cinematic video and image",
   description:
     "Generate cinematic video and ultra-realistic images from a single prompt. Free to start, no card required.",
 };
