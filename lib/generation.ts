@@ -4,29 +4,37 @@ export type ImageResult = { url: string };
 export type VideoResult = { url: string; demo: boolean };
 
 /**
- * Real image generation via OpenAI's image API.
- * Requires OPENAI_API_KEY. This is the primary, fully-working generation
- * path for the rebuild — the product's actual "hero" flow.
+ * Image generation. Uses OpenAI if OPENAI_API_KEY is set (costs money per
+ * image). Otherwise falls back to Pollinations.ai, a free, keyless image
+ * generation API — no card, no signup, still a real model call.
  */
 export async function generateImage(prompt: string): Promise<ImageResult> {
   const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    throw new Error(
-      "Image generation isn't configured yet — add OPENAI_API_KEY to enable it."
-    );
+
+  if (apiKey) {
+    const client = new OpenAI({ apiKey });
+    const response = await client.images.generate({
+      model: "dall-e-3",
+      prompt,
+      n: 1,
+      size: "1024x1024",
+      quality: "standard",
+    });
+    const url = response.data?.[0]?.url;
+    if (!url) throw new Error("The model returned no image. Try a different prompt.");
+    return { url };
   }
 
-  const client = new OpenAI({ apiKey });
-  const response = await client.images.generate({
-    model: "dall-e-3",
-    prompt,
-    n: 1,
-    size: "1024x1024",
-    quality: "standard",
-  });
+  // Free fallback — Pollinations.ai renders the image at this URL directly.
+  const seed = Math.floor(Math.random() * 1_000_000);
+  const url = `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=1024&height=1024&seed=${seed}&nologo=true`;
 
-  const url = response.data[0]?.url;
-  if (!url) throw new Error("The model returned no image. Try a different prompt.");
+  // Pollinations generates lazily on first fetch of the URL, so warm it up
+  // here to confirm it actually succeeded before we call the render "done".
+  const check = await fetch(url);
+  if (!check.ok) {
+    throw new Error("The image provider is busy. Try again in a moment.");
+  }
   return { url };
 }
 
