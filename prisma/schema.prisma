@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String       @id @default(cuid())
+  email         String       @unique
+  name          String?
+  passwordHash  String
+  credits       Int          @default(8)
+  hasUsedTrial  Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  generations   Generation[]
+}
+
+enum GenerationType {
+  IMAGE
+  VIDEO
+}
+
+enum GenerationStatus {
+  PENDING
+  PROCESSING
+  COMPLETE
+  FAILED
+}
+
+enum ModelProvider {
+  GPT_IMAGE
+  SORA
+  VEO
+  RUNWAY
+}
+
+model Generation {
+  id           String            @id @default(cuid())
+  userId       String
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type         GenerationType
+  provider     ModelProvider
+  prompt       String
+  status       GenerationStatus  @default(PENDING)
+  outputUrl    String?
+  errorMessage String?
+  creditsSpent Int               @default(1)
+  watermarked  Boolean           @default(false)
+  createdAt    DateTime          @default(now())
+
+  @@index([userId, createdAt])
+}
