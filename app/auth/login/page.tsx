@@ -1,19 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { FormEvent, Suspense, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 
 function LoginForm() {
   const router = useRouter();
   const params = useSearchParams();
-  const next = params.get("callbackUrl") || params.get("next") || "/generate/video";
+  const { status } = useSession();
+  const next = params.get("callbackUrl") || params.get("next") || "/";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+
+  // Auto-redirect if user is already authenticated
+  useEffect(() => {
+    if (status === "authenticated") {
+      router.replace(next);
+    }
+  }, [status, router, next]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -21,13 +29,15 @@ function LoginForm() {
     setError(null);
 
     const result = await signIn("credentials", { redirect: false, email, password });
-    setLoading(false);
 
     if (result?.error) {
+      setLoading(false);
       setError("Email or password is incorrect.");
       return;
     }
-    router.push(next);
+
+    // Immediately navigate to Home page / destination & sync session
+    window.location.href = next;
   }
 
   return (
@@ -69,7 +79,7 @@ function LoginForm() {
 
         {error && <p className="text-sm text-[#e07a7a]">{error}</p>}
 
-        <button type="submit" disabled={loading} className="btn-primary w-full">
+        <button type="submit" disabled={loading} className="btn-primary w-full py-3">
           {loading ? "Logging in…" : "Log in"}
         </button>
       </form>
