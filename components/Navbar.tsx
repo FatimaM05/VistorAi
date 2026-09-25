@@ -1,12 +1,31 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+
+function firstName(name: string | null | undefined): string {
+  if (!name) return "You";
+  return name.split(" ")[0];
+}
+function initials(name: string | null | undefined): string {
+  if (!name) return "?";
+  const parts = name.trim().split(/\s+/);
+  return parts.length === 1 ? parts[0][0] : `${parts[0][0]}${parts[parts.length - 1][0]}`;
+}
+
+const NAV_LINKS = [
+  { href: "/generate/video", label: "Video" },
+  { href: "/generate/image", label: "Image" },
+  { href: "/history",        label: "History" },
+  { href: "/upgrade",        label: "Pricing" },
+];
 
 export default function Navbar() {
   const { data: session, status } = useSession();
   const [credits, setCredits] = useState<number | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     if (status !== "authenticated") return;
@@ -16,46 +35,73 @@ export default function Navbar() {
       .catch(() => {});
   }, [status]);
 
+  const userName = session?.user?.name;
+
   return (
-    <header className="sticky top-0 z-40 border-b border-line/60 bg-ink/85 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="font-display text-xl tracking-tight">
+    <div className="navbar-wrapper">
+      <div className="navbar-inner">
+
+        {/* ── Brand ── */}
+        <Link href="/" className="navbar-logo" aria-label="VistorAi home">
           VistorAi
         </Link>
 
-        <nav className="hidden items-center gap-7 text-sm text-muted md:flex">
-          <Link href="/generate/video" className="hover:text-paper">Video</Link>
-          <Link href="/generate/image" className="hover:text-paper">Image</Link>
-          <Link href="/history" className="hover:text-paper">History</Link>
-          <Link href="/upgrade" className="hover:text-paper">Pricing</Link>
+        {/* ── Nav links (desktop) ── */}
+        <nav className="hidden md:flex items-center gap-0.5">
+          {NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`navbar-link ${pathname?.startsWith(link.href) ? "active" : ""}`}
+            >
+              {link.label}
+            </Link>
+          ))}
         </nav>
 
-        <div className="flex items-center gap-3">
+        {/* ── Right side controls ── */}
+        <div className="flex items-center gap-2">
           {status === "authenticated" ? (
             <>
+              {/* User chip */}
+              <span className="user-chip hidden sm:inline-flex">
+                <span className="user-avatar">{initials(userName)}</span>
+                <span className="user-name">{firstName(userName)}</span>
+              </span>
+
+              {/* Credits */}
               {credits !== null && (
-                <span className="hidden rounded-full border border-line px-3 py-1.5 text-xs text-muted sm:inline">
-                  {credits} credit{credits === 1 ? "" : "s"}
+                <span className="credits-badge hidden sm:inline-flex">
+                  {credits} cr
                 </span>
               )}
-              <button onClick={() => signOut({ callbackUrl: "/" })} className="btn-ghost !py-2 !px-4 text-xs">
+
+              {/* Sign out */}
+              <button
+                onClick={() => signOut({ callbackUrl: "/" })}
+                className="btn-sm-ghost"
+              >
                 Sign out
               </button>
             </>
           ) : status === "loading" ? (
-            <div className="h-9 w-20 animate-pulse rounded-full bg-surface2" />
+            <div className="h-8 w-24 animate-pulse rounded-full bg-surface2" />
           ) : (
             <>
-              <Link href="/auth/login" className="text-sm text-muted hover:text-paper">
+              <Link
+                href="/auth/login"
+                className="navbar-link"
+              >
                 Log in
               </Link>
-              <Link href="/auth/signup" className="btn-primary !py-2 !px-4 text-xs">
-                Claim free trial
+              <Link href="/auth/signup" className="btn-primary !py-2 !px-5 !text-xs">
+                Get started
               </Link>
             </>
           )}
         </div>
+
       </div>
-    </header>
+    </div>
   );
 }

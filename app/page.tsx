@@ -1,6 +1,7 @@
 import Link from "next/link";
 import PromptHero from "@/components/PromptHero";
 import GalleryTile from "@/components/GalleryTile";
+import MagicShowcase from "@/components/MagicShowcase";
 
 const GALLERY: { label: string; kind: "video" | "image"; tall?: boolean; src: string }[] = [
   {
@@ -65,7 +66,7 @@ export default function HomePage() {
       <PromptHero />
 
       <section className="mx-auto max-w-6xl px-6 py-16">
-        <div className="mb-10 grid gap-6 sm:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-3">
           {STEPS.map((step, i) => (
             <div key={step.title} className="border-t border-line pt-4">
               <p className="font-display text-2xl italic text-gold">{String(i + 1).padStart(2, "0")}</p>
@@ -75,6 +76,9 @@ export default function HomePage() {
           ))}
         </div>
       </section>
+
+      {/* ─── NEW MAGICAL NEURAL MOTION SHOWCASE ─── */}
+      <MagicShowcase />
 
       <section className="mx-auto max-w-6xl px-6 pb-20">
         <h2 className="font-display text-3xl italic">Made with a single prompt</h2>

@@ -5,31 +5,38 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#0D0D12",
-        surface: "#16161D",
-        surface2: "#1D1D26",
-        line: "#2A2A35",
-        paper: "#F2F0EA",
-        muted: "#8B8A94",
-        gold: "#E8A33D",
-        goldDim: "#7A5A24",
-        violet: "#5B5FEF",
+        // ── Electric Indigo Palette ───────────────────────────
+        ink:      "#080B10",   // near-black body
+        surface:  "#111622",   // card bg
+        surface2: "#161D2E",   // elevated surface
+        line:     "#1E2A45",   // border
+        paper:    "#EEF2FF",   // primary text
+        muted:    "#8892B0",   // secondary text
+        dim:      "#4A5568",   // placeholder / disabled
+        // ── Accents ───────────────────────────────────────────
+        indigo:   "#6366F1",   // primary accent
+        indigo2:  "#818CF8",   // lighter accent
+        cyan:     "#22D3EE",   // secondary accent
+        // ── Legacy compat ─────────────────────────────────────
+        gold:     "#818CF8",   // keeps old gold refs → maps to indigo2
+        violet:   "#6366F1",
+        goldDim:  "#2D2F6A",
       },
       fontFamily: {
-        display: ["var(--font-fraunces)", "Georgia", "serif"],
-        sans: ["var(--font-inter)", "system-ui", "sans-serif"],
+        display: ["'Playfair Display'", "Georgia", "serif"],
+        sans:    ["'DM Sans'", "system-ui", "sans-serif"],
       },
-      maxWidth: {
-        prose: "70ch",
-      },
+      maxWidth: { prose: "70ch" },
       keyframes: {
         fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
       },
       animation: {
-        fadeIn: "fadeIn .7s ease both",
+        fadeIn: "fadeIn .6s ease both",
       },
     },
   },
   plugins: [],
 };
 export default config;
+
+

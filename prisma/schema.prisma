@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
@@ -15,7 +14,8 @@ model User {
   passwordHash  String
   credits       Int          @default(8)
   hasUsedTrial  Boolean      @default(true)
-  createdAt     DateTime     @default(now())
+  resetToken       String?      @unique
+  resetTokenExpiry DateTime?
   generations   Generation[]
 }
 
